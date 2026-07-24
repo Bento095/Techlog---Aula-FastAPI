@@ -1,8 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
 
-@contextmanager
-
 class BancoDeDadosLocal:
     def  __init__(self,nome_arquivo='teclog.db'):
         self.nome_arquivo = nome_arquivo
