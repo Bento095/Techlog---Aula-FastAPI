@@ -37,10 +37,10 @@ class ClienteRepositorio:
             cursor.execute('UPDATE clientes SET nome = ?, email = ?, telefone = ? WHERE id = ?', (cliente.nome, cliente.email, cliente.telefone, cliente_id))
             if cursor.rowcount == 0:
                 return None
-            return Cliente(id=cliente_id, nome=cliente.nome, email=cliente.email, telefone=cliente.telefone)
+            return Cliente(id_=cliente_id, nome=cliente.nome, email=cliente.email, telefone=cliente.telefone)
 
         
-    async def deletar_cliente(self, cliente_id: int) -> None:
+    async def deletar_cliente(self, cliente_id: int) -> bool:
         with self.bd.conectar() as conexao:
             cursor = conexao.cursor()
             cursor.execute('DELETE FROM clientes WHERE id = ?', (cliente_id,))
