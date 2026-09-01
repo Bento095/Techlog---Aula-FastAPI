@@ -1,18 +1,25 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.requests import Request
+from fastapi.responses import HTMLResponse
+
 from app.modelos.cliente import Cliente, ClienteCriarAtualizar
 from app.banco_de_dados.cliente_repositorio import ClienteRepositorio
 from app.dependencias import obter_cliente_repositorio
 
-    
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")   
 
 router = APIRouter(
-    prefix="/clientes",
+    prefix="/api/clientes",
 )
 
-CLIENT_LIST = [Cliente(id_=1, nome="Jubileu", email='jubileu@exemplo.com', telefone="1234569800"), 
-                     Cliente(id_=2, nome="Jubileia", email='jubileia@exemplo.com', telefone="12398769800")]
+front_router =APIRouter(
+    prefix="/clientes"
+)
+
 
 @router.get("/", response_model=list[Cliente])
 async def listar_clientes(cliente_repositorio: Annotated[ClienteRepositorio, Depends(obter_cliente_repositorio)]):
@@ -58,7 +65,24 @@ async def deletar_cliente(
     if not sucesso:
         raise HTTPException(status_code=404, detail="Cliente não encontrado!")
     
+@front_router.get("/", response_class=HTMLResponse)
+async def pagina_listar_clientes(
+    request: Request,
+    cliente_repositorio: Annotated[ClienteRepositorio, Depends(obter_cliente_repositorio)]
+):
+    clientes = await cliente_repositorio.listar_clientes()
+    return templates.TemplateResponse(request, "clientes.html", {"clientes": clientes})
 
+@front_router.get("/novo", response_class=HTMLResponse)
+async def pagina_criar_cliente(request: Request):
+    return templates.TemplateResponse(request, "clientes-form.html", {"cliente": None})
 
-
-
+@front_router.get("/{cliente_id}", response_class=HTMLResponse)
+async def pagina_editar_cliente(
+    request: Request,
+    cliente_id: int,
+    cliente_repositorio: Annotated[ClienteRepositorio, Depends(obter_cliente_repositorio)]
+):
+    cliente = await cliente_repositorio.obter_cliente(cliente_id)
+   
+    return templates.TemplateResponse(request, "clientes-form.html", {"cliente": cliente})
