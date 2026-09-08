@@ -8,10 +8,10 @@ class AuthenticationToken(BaseHTTPMiddleware):
 
         if request_path.startswith("/login") or request_path.startswith("/registro"):
             return await call_next(request)
-    
+        
         token = request.cookies.get("session_token")
 
-        if token != 'token-valido':
+        if token != 'token-senha':
             return RedirectResponse(url="/login", status_code=303)
-    
+        
         return await call_next(request)

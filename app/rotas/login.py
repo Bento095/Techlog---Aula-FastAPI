@@ -28,27 +28,30 @@ async def login(
     email=Form(...),
     senha=Form(...),
 ):
+    # 1. Validação hardcoded do Administrador
     if email == "admin@techlog.com.br" and senha == "senha123":
-        response = RedirectResponse(url="/dashboard", status_code=303)
+        response = RedirectResponse(url="/", status_code=303)
         response.set_cookie(key="session_token", value="token-senha", httponly=True)
         return response
 
+    # 2. Busca o usuário cadastrado no banco de dados
     try:
         usuario = await usuario_repositorio.buscar_usuarios_por_email_senha(email, senha)
     except sqlite3.OperationalError:
         usuario = None
 
-    if usuario == "admin@techlog.com.br" and senha == "senha123":
+    # 3. Se encontrou o usuário no banco, autentica e redireciona
+    if usuario:
         response = RedirectResponse(url="/dashboard", status_code=303)
-        response.set_cookie(key="session_token", value="token-senha", httponly=True)
+        response.set_cookie(key="session_token", value=f"token-{usuario.email}", httponly=True)
         return response
 
+    # 4. Se falhou, retorna para o login com a mensagem de erro
     return templates.TemplateResponse(
         request,
         "login.html",
         {
             "email": email,
-            "senha": senha,
             "error": "Credenciais inválidas. Por favor, tente novamente.",
         },
     )
