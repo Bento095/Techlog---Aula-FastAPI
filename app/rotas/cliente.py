@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from app.modelos.cliente import Cliente, ClienteCriarAtualizar
 from app.banco_de_dados.cliente_repositorio import ClienteRepositorio
 from app.dependencias import obter_cliente_repositorio
 
-from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="templates")   
 
