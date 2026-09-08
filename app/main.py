@@ -4,7 +4,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 
-from app.rotas import cliente
+from app.rotas import cliente, login, registro
+from app.autenticacao_middleware import AuthenticationToken
 
 
 app = FastAPI(
@@ -14,8 +15,13 @@ app = FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.add_middleware(AuthenticationToken)
+
 app.include_router(cliente.router)
 app.include_router(cliente.front_router)
+
+app.include_router(login.router)
+app.include_router(registro.router)
 
 templates = Jinja2Templates(directory="templates")
 
