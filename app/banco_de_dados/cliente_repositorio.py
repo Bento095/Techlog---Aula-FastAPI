@@ -14,6 +14,7 @@ class ClienteRepositorio:
             linhas = cursor.fetchall()
             clientes = [Cliente(id_=linha[0], nome=linha[1], email=linha[2], telefone=linha[3]) for linha in linhas]
             return clientes
+        #usar ORM no futuro para evitar SQL Injection e facilitar a manutenção do código
         
     async def obter_cliente(self, cliente_id: int) -> Cliente | None:
         with self.bd.conectar() as conexao:
