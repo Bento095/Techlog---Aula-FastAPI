@@ -1,6 +1,4 @@
-Aqui está um modelo completo e organizado de `README.md` para o seu repositório no GitHub:
 
-```markdown
 # 🚀 Techlog Solutions - CRM
 
 Um sistema de CRM (Customer Relationship Management) simples e robusto desenvolvido com **FastAPI**, **Jinja2** e **SQLite**. O projeto conta com rotas de autenticação, controle de sessão via cookies, gerenciamento de clientes e testes automatizados.
@@ -124,7 +122,5 @@ pytest test/banco_de_dados/test_cliente_repositorio.py -k test_listar_clientes_r
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais. Sinta-se à vontade para clonar, estudar e modificar!
-
-```
 
 ```
